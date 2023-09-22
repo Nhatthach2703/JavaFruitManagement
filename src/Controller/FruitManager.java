@@ -80,6 +80,7 @@ public class FruitManager extends Menu<String>{
     }
 
     public void shopping() {
+        fruitsList = refreshFruitList(fruitsList);
         if (fruitsList.isEmpty()) {
             System.out.println("\nThere are no product!!!");
             return;
@@ -98,6 +99,7 @@ public class FruitManager extends Menu<String>{
                     double price = f.getPrice();
                     int quantity = f.getQuantity();
                     int quantityOrder = l.getInt("Please input quantity", 1, quantity);
+                    f.setQuantity(quantity - quantityOrder);
                     odersList.add(new Order(id, name, quantityOrder, price));
                 }
             }
@@ -151,5 +153,22 @@ public class FruitManager extends Menu<String>{
             }
         }
         return id;
+    }
+    
+    public ArrayList<Fruit> refreshFruitList(ArrayList<Fruit> fruitsList) {
+        ArrayList<Fruit> temp = new ArrayList<>();
+        int n = fruitsList.size();
+        for (int i = 0; i < n; i++) {
+            Fruit currentFruit = fruitsList.get(i);
+            if (currentFruit.getQuantity() > 0) {
+                temp.add(currentFruit);
+            } else if (i + 1 < n) {
+                Fruit nextFruit = fruitsList.get(i + 1);
+                nextFruit.setId(currentFruit.getId());
+                temp.add(nextFruit);
+                i++;
+            }
+        }
+        return temp;
     }
 }
